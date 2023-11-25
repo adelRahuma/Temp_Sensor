@@ -37,6 +37,23 @@ app.post("/arduino-data", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+app.get("/arduino-data", async (req, res) => {
+  try {
+    // Use pool.getConnection() and connection.execute() for better handling of connections
+    const connection = await pool.getConnection();
+    await connection.changeUser({ database: process.env.DATABASE });
+
+    const query = "SELECT * FROM TempSensor";
+    const [results] = await connection.execute(query);
+
+    connection.release();
+
+    res.status(200).json({ message: "Data retrieved successfully", results });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
