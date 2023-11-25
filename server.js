@@ -48,7 +48,7 @@ app.get("/arduino-data", async (req, res) => {
 
     connection.release();
 
-    res.status(200).json({ message: "Data retrieved successfully", results });
+    res.send({ result: results });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
