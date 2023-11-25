@@ -21,18 +21,12 @@ app.use(express.json());
 app.post("/arduino-data", async (req, res) => {
   try {
     const data = req.body.data;
-
-    // Use pool.getConnection() and connection.execute() for better handling of connections
     const connection = await pool.getConnection();
     await connection.changeUser({ database: process.env.DATABASE });
-
     const query = "INSERT INTO TempSensor(TEMP) VALUES (?)";
     const [results] = await connection.execute(query, [data]);
-
     connection.release();
-
-    // Use status code 201 for resource creation
-    res.status(201).json({ message: "Data inserted successfully", results });
+    res.status(201).json({ result: results });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -40,16 +34,12 @@ app.post("/arduino-data", async (req, res) => {
 });
 app.get("/arduino-data", async (req, res) => {
   try {
-    // Use pool.getConnection() and connection.execute() for better handling of connections
     const connection = await pool.getConnection();
     await connection.changeUser({ database: process.env.DATABASE });
-
     const query = "SELECT * FROM TempSensor";
     const [results] = await connection.execute(query);
-
     connection.release();
-
-    res.send({ result: results });
+    res.status(200).json({ result: results });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
