@@ -51,6 +51,9 @@ app.post("/arduino-data", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+app.get("/dd", (req, res) => {
+  res.send({ data: temperatureData });
+});
 app.get("/data", async (req, res) => {
   try {
     const connection = await pool.getConnection();
@@ -66,9 +69,7 @@ app.get("/data", async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
-app.get("/dd", (req, res) => {
-  res.json({ data: temperatureData });
-});
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
