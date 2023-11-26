@@ -38,7 +38,7 @@ app.post("/arduino-data", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.get("/arduino-data", async (req, res) => {
+app.get("/data", async (req, res) => {
   try {
     const connection = await pool.getConnection();
     await connection.changeUser({ database: process.env.DATABASE });
