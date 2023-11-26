@@ -5,7 +5,14 @@ const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000; // Use the specified port in the environment or default to 3000
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://your-allowed-origin.com",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
+
 const pool = mysql.createPool({
   host: process.env.HOST,
   user: process.env.MYUSER,
@@ -45,10 +52,12 @@ app.get("/data", async (req, res) => {
     const query = "SELECT * FROM TempSensor";
     const [results] = await connection.execute(query);
     connection.release();
-    res.send({ result: results });
+    res.send(results);
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 });
 
