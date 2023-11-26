@@ -45,7 +45,7 @@ app.get("/arduino-data", async (req, res) => {
     const query = "SELECT * FROM TempSensor";
     const [results] = await connection.execute(query);
     connection.release();
-    res.status(200).json({ result: results });
+    res.send({ result: results });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
