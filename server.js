@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const mysql = require("mysql2/promise"); // Using promise-based MySQL
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 3000; // Use the specified port in the environment or default to 3000
@@ -30,7 +31,12 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
-
+app.use(bodyParser.json());
+const temperatureData = [
+  { ID: 1, TEMP: "12.34" },
+  { ID: 2, TEMP: "22.56" },
+  // ... other data
+];
 app.post("/arduino-data", async (req, res) => {
   try {
     const data = req.body.data;
@@ -60,7 +66,9 @@ app.get("/data", async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
-
+app.get("/dd", (req, res) => {
+  res.json({ data: temperatureData });
+});
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
