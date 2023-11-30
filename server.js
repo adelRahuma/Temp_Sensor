@@ -5,13 +5,6 @@ const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000; // Use the specified port in the environment or default to 3000
-app.use(
-  cors({
-    origin: "https://mytemp-z970.onrender.com",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
 
 const pool = mysql.createPool({
   host: process.env.HOST,
