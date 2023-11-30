@@ -2,7 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const mysql = require("mysql2/promise"); // Using promise-based MySQL
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 3000; // Use the specified port in the environment or default to 3000
@@ -31,12 +30,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
-app.use(bodyParser.json());
-const temperatureData = [
-  { ID: 1, TEMP: "12.34" },
-  { ID: 2, TEMP: "22.56" },
-  // ... other data
-];
+
 app.post("/arduino-data", async (req, res) => {
   try {
     const data = req.body.data;
@@ -51,9 +45,7 @@ app.post("/arduino-data", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.get("/dd", (req, res) => {
-  res.send({ data: temperatureData });
-});
+
 app.get("/data", async (req, res) => {
   try {
     const connection = await pool.getConnection();
@@ -61,12 +53,10 @@ app.get("/data", async (req, res) => {
     const query = "SELECT * FROM TempSensor";
     const [results] = await connection.execute(query);
     connection.release();
-    res.send(results);
+    res.send({ data: results }); // Wrap the results in an object
   } catch (error) {
     console.error("Error:", error);
-    res
-      .status(500)
-      .json({ error: "Internal Server Error", details: error.message });
+    res.send({ error: "Internal Server Error", details: error.message });
   }
 });
 
