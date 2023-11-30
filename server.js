@@ -53,7 +53,9 @@ app.get("/data", async (req, res) => {
     res.send({ error: "Internal Server Error", details: error.message });
   }
 });
-
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
