@@ -17,11 +17,7 @@ const pool = mysql.createPool({
 });
 // Enable CORS for all routes
 app.use(
-  cors({
-    origin: "https://mytemp-z970.onrender.com",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
+  cors()
 );
 app.use(express.json());
 
